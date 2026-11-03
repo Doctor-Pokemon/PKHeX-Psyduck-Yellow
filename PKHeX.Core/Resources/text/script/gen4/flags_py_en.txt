@@ -298,3 +298,93 @@
 0xB5C	s	Opening: Lab Oak hidden
 0xB5E	s	Opening: Town Oak hidden
 0xB5F	s	Opening: Rival hidden
+0x93D	s	Silph Co.: Event flag
+0x954	h	Pokémon Mansion / Rocket Hideout: Item ball
+0x956	s	Victory Road: Barrier 1 open
+0x957	s	Victory Road: Barrier 2 open
+0x958	s	Victory Road: Barrier 3 open
+0x959	s	Victory Road: Barrier 4 open
+0x95A	h	Safari Zone: Item ball
+0x95B	h	Safari Zone: Item ball
+0x95C	h	Pokémon Mansion / Rocket Hideout: Item ball
+0x95D	h	Safari Zone: Item ball
+0x95E	h	Safari Zone: Item ball
+0x95F	h	Safari Zone: Item ball
+0x960	h	Pokémon Mansion / Rocket Hideout: Item ball
+0x961	h	Safari Zone: Item ball
+0x962	h	Safari Zone: Item ball
+0x963	h	Safari Zone: Item ball
+0x965	h	Safari Zone: Item ball
+0x967	h	Safari Zone: Item ball
+0x968	h	Pokémon Mansion / Rocket Hideout: Item ball
+0x970	h	Pokémon Mansion / Rocket Hideout: Item ball
+0x974	h	Pokémon Mansion / Rocket Hideout: Item ball
+0x97C	h	Pokémon Mansion / Rocket Hideout: Item ball
+0x98C	h	Pokémon Mansion / Rocket Hideout: Item ball
+0x99C	h	Pokémon Mansion / Rocket Hideout: Item ball
+0x9A0	h	Pokémon Mansion / Rocket Hideout: Item ball
+0x9BB	f	Fly point: New Bark Town unlocked
+0x9EF	h	Rocket Hideout: Item ball
+0x9F0	h	Rocket Hideout: Item ball
+0x9F1	h	Rocket Hideout: Item ball
+0x9F3	h	Rocket Hideout: Item ball
+0x9F5	h	Rocket Hideout: Item ball
+0x9F7	h	Rocket Hideout: Item ball
+0x9F9	h	Rocket Hideout: Lift Key taken
+0x9FC	h	Rocket Hideout: Item ball
+0x9FD	h	Rocket Hideout: Item ball
+0xA1F	h	Pokémon Tower: Item ball
+0xA20	h	Pokémon Tower: Item ball
+0xA23	h	Pokémon Tower: Item ball
+0xA24	h	Pokémon Tower: Item ball
+0xA25	h	Pokémon Tower: Item ball
+0xA27	h	Pokémon Tower: Item ball
+0xA29	h	Pokémon Tower: Item ball
+0xA2B	h	Rocket Hideout: Item ball
+0xA2C	h	Rocket Hideout: Item ball
+0xA2D	h	Victory Road: Item ball
+0xA2F	h	Victory Road: Item ball
+0xA30	h	Victory Road: Item ball
+0xA31	h	Victory Road: Item ball
+0xA35	h	Victory Road: Item ball
+0xA37	h	Victory Road: Item ball
+0xA38	h	Silph Co.: Item ball
+0xA39	h	Silph Co.: Item ball
+0xA3C	h	Silph Co.: Item ball
+0xA3D	h	Silph Co.: Item ball
+0xA3F	h	Silph Co.: Item ball
+0xA43	h	Silph Co.: Item ball
+0xA44	h	Silph Co.: Item ball
+0xA45	h	Silph Co.: Item ball
+0xA5B	h	Silph Co.: Item ball
+0xA5C	h	Silph Co.: Item ball
+0xA5F	h	Silph Co.: Item ball
+0xA61	h	Silph Co.: Item ball
+0xA63	s	Route 22: Second rival battle done
+0xA64	s	Silph Co.: Event flag (1)
+0xA65	s	Silph Co.: Event flag (2)
+0xA68	s	Silph Co.: Event flag (3)
+0xA6B	s	Johto: First S.S. Aqua arrival reached
+0xA6C	g	Fuchsia Warden: HM given
+0xA6D	s	Rocket Hideout: Event flag (1)
+0xA71	s	Rocket Hideout: Event flag (2)
+0xA75	s	Pokémon Tower: Scene flag
+0xA7E	s	Pewter: Guide hidden (Boulder Badge owned)
+0xA8C	m	Bedroom PC: Initialised
+0xA8D	s	Route 24: Nugget Bridge event
+0xA94	s	Route 25: Bill event
+0xB25	h	Viridian Forest: Item ball / event
+0xB26	h	Viridian Forest: Item ball / event
+0xB27	h	Viridian Forest: Item ball / event
+0xB2A	h	Viridian Forest: Item ball / event
+0xB2B	h	Viridian Forest: Item ball / event
+0xB2C	h	Mt. Moon: Item ball
+0xB2D	h	Mt. Moon: Item ball
+0xB2E	h	Mt. Moon: Item ball
+0xB2F	h	Mt. Moon: Item ball
+0xB30	h	Mt. Moon: Item ball
+0xB31	h	Mt. Moon: Item ball
+0xB32	h	Mt. Moon: Item ball
+0xB35	h	Mt. Moon: Item ball
+0xB38	h	Mt. Moon: Item ball
+0xB3B	m	Bedroom PC: Item taken
