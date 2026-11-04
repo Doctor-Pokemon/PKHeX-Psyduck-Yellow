@@ -61,5 +61,5 @@
 0x406E	s	Pokémon Mansion: State (2)
 0x406F	s	Pokémon Mansion: State (3)
 0x4128	s	Johto postgame: Progress	0:Not started,6:Elm has called (Johto unlocked),7:Mr. Pokémon met
-0x413C	s	Johto postgame: Mega Typhlosion state
+0x413C	s	Johto postgame: bonus Pokémon state
 0x4168	s	Oak escort: State

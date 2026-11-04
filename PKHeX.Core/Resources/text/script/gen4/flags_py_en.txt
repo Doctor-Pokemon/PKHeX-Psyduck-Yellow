@@ -233,7 +233,7 @@
 1962	t	Had Bird Keeper Jose 3rd Rematch
 2746	s	Learned trendy phrase (Today)
 0x964	s	Game Clear (Yellow: Champion beaten)
-0x9D6	*	Mega Evolution test switch
+0x9D6	*	Optional feature switch
 0xA60	g	Route 2: Flash received
 0xA70	s	Rocket Hideout: Giovanni hidden
 0xA73	g	Pokémon Tower: Poké Flute received (7F)
