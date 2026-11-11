@@ -388,3 +388,7 @@
 0xB35	h	Mt. Moon: Item ball
 0xB38	h	Mt. Moon: Item ball
 0xB3B	m	Bedroom PC: Item taken
+0xA54	g	Oak's Lab aide: Venusaurite given
+0xA55	g	Oak's Lab aide: Charizardite X given
+0xA56	g	Oak's Lab aide: Charizardite Y given
+0xA57	g	Oak's Lab aide: Blastoisinite given

@@ -41,6 +41,16 @@ public static partial class PsyduckYellow0029
     [
         CreateStarter(54), CreateStarter(133), CreateStarter(175),
     ];
+    /// <summary>ROM 0233 Kanto starter gifts (Bulbasaur in Cerulean, Charmander on Route 24, Squirtle in Vermilion): level 10, met in those towns; only the expanded profile uses them.</summary>
+    public static readonly EncounterStatic4[] KantoGifts =
+    [
+        CreateKantoGift(1, 141), CreateKantoGift(4, 172), CreateKantoGift(7, 143),
+    ];
+    private static EncounterStatic4 CreateKantoGift(ushort species, byte location) => new(GameVersion.HG)
+    {
+        Species = species, Level = 10, Location = location, FixedBall = Ball.Poke,
+        GroundTile = GroundTileAllowed.Building | GroundTileAllowed.Max_Pt, IsPsyduckYellowStarter = true,
+    };
     private static EncounterStatic4 CreateStarter(ushort species) => new(GameVersion.HG)
     {
         Species = species, Level = 5, Location = 138, FixedBall = Ball.Poke,

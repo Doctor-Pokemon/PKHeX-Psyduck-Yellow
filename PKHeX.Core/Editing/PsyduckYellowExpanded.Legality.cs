@@ -132,6 +132,9 @@ public static partial class PsyduckYellowExpanded
     /// <summary>True for the starter Eevee/Psyduck, their Eeveelutions and Mega copies: these exist only as the starter gift line, identified by their own species.</summary>
     public static bool IsStarterSpecies(ushort species) => species is StarterEevee or MegaEevee or StarterPsyduck or MegaPsyduck or (>= StarterLineFirst and <= StarterLineLast);
 
+    /// <summary>Bulbasaur/Charmander/Squirtle lines: the Kanto starter gifts carry the Classic Ribbon in ROM 0233.</summary>
+    public static bool IsKantoStarterLine(ushort species) => species is >= 1 and <= 9;
+
     public static bool TryGetRetailView(PK4 pk, out PK4 view)
     {
         view = pk;
@@ -165,7 +168,13 @@ public static partial class PsyduckYellowExpanded
                                    || string.Equals(clone.Nickname, ownName, StringComparison.OrdinalIgnoreCase)))
             clone.Nickname = expectedName;
         if (clone.Version == GameVersion.PY)
+        {
             clone.Version = GameVersion.HG;
+            // ROM 0233 stamps every gift in a Cherish Ball and gives the Kanto starter gifts the Classic Ribbon (the Oak's Lab aide checks it); retail has neither for these, so the view shows a Poke Ball and no Classic Ribbon.
+            if (clone.BallDPPt == (byte)Ball.Cherish) clone.BallDPPt = (byte)Ball.Poke;
+            if (clone.BallHGSS == (byte)Ball.Cherish) clone.BallHGSS = (byte)Ball.Poke;
+            if (IsKantoStarterLine(species)) clone.RibbonClassic = false;
+        }
         view = clone;
         return true;
     }
