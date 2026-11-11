@@ -63,3 +63,19 @@
 0x4128	s	Johto postgame: Progress	0:Not started,6:Elm has called (Johto unlocked),7:Mr. Pokémon met
 0x413C	s	Johto postgame: bonus Pokémon state
 0x4168	s	Oak escort: State
+0x407A	s	Card Album: Brock rematch wins
+0x407F	s	Card Album: Misty rematch wins
+0x4084	s	Card Album: Lt. Surge rematch wins
+0x408A	s	Card Album: Erika rematch wins
+0x408B	s	Card Album: Koga rematch wins
+0x408F	s	Card Album: Sabrina rematch wins
+0x4093	s	Card Album: Blaine rematch wins
+0x40A0	s	Card Album: Giovanni rematch wins
+0x40A3	s	Card Album: Falkner rematch wins
+0x40A4	s	Card Album: Bugsy rematch wins
+0x40A6	s	Card Album: Whitney rematch wins
+0x40C2	s	Card Album: Morty rematch wins
+0x40C7	s	Card Album: Chuck rematch wins
+0x40CC	s	Card Album: Jasmine rematch wins
+0x40CF	s	Card Album: Pryce rematch wins
+0x40D2	s	Card Album: Clair rematch wins
