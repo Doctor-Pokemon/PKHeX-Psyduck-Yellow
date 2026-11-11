@@ -14,7 +14,7 @@ public static class PsyduckYellowImport
     public static bool Enabled { get; set; }
 
     /// <summary>Keep the origin game the Pokémon came from (true) or stamp it as Psyduck Yellow (false).</summary>
-    public static bool KeepOriginGame { get; set; } = true;
+    public static bool KeepOriginGame { get; set; } = false;
 
     /// <summary>Fallback when the game has no equivalent location: "Mystery Zone".</summary>
     public const ushort FallbackLocation = 0;
