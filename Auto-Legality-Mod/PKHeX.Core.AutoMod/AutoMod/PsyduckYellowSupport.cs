@@ -3,7 +3,7 @@ using System.Linq;
 namespace PKHeX.Core.AutoMod;
 
 /// <summary>
-/// Psyduck Yellow generation: Pokémon are built from the game's own encounters (the Pallet starter gifts and the Kanto wild areas).
+/// Psyduck Yellow generation: Pokémon are built from the game's own encounters (the Pallet and Kanto starter gifts, the wild areas including the post-Hall-of-Fame tables, and the legendary spots / Embedded Tower encounters).
 /// The starter Psyduck/Eevee line is recognised by its own species IDs, never by guessing from a plain Psyduck or Eevee.
 /// </summary>
 public static class PsyduckYellowSupport
@@ -50,7 +50,7 @@ public static class PsyduckYellowSupport
         {
             // Wild Psyduck/Eevee are ordinary species; the starter line only ever comes from the Pallet gift.
             var isStarterGift = enc is EncounterStatic4 { IsPsyduckYellowStarter: true };
-            var gift = isStarterGift && enc.Species != (ushort)Species.Togepi;
+            var gift = isStarterGift && enc.Species is (ushort)Species.Psyduck or (ushort)Species.Eevee; // only the Pallet Psyduck/Eevee gifts are the starter line (Togepi and the Kanto starters are ordinary species)
             if (gift != isStarterLine && (gift || isStarterLine))
                 continue;
             if (enc.LevelMin > set.Level)

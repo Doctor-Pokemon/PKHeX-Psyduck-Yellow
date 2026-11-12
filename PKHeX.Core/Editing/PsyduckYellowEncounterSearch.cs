@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace PKHeX.Core;
 
 /// <summary>
-/// Encounter search for Psyduck Yellow saves: the game's own Kanto wild encounters and the three starter gifts,
+/// Encounter search for Psyduck Yellow saves: the game's own wild encounters (Kanto, and the post-Hall-of-Fame tables), the Pallet and Kanto starter gifts and the legendary encounters (themed spots, Embedded Tower),
 /// including encounters of a species' pre-evolutions (a Scizor search finds Scyther).
 /// </summary>
 public static class PsyduckYellowEncounterSearch
@@ -22,6 +22,17 @@ public static class PsyduckYellowEncounterSearch
         {
             if (Matches(starter.Species))
                 yield return starter;
+        }
+
+        foreach (var gift in PsyduckYellow0029.KantoGifts)
+        {
+            if (Matches(gift.Species))
+                yield return gift;
+        }
+        foreach (var legend in PsyduckYellow0029.Legendaries)
+        {
+            if (Matches(legend.Species))
+                yield return legend;
         }
 
         // Wild areas repeat each slot for every time of day and slot number; list each distinct place/level once.

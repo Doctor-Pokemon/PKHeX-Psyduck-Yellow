@@ -81,6 +81,8 @@ public sealed class MovePPVerifier : Verifier
         {
             var healed = pk.GetMovePP(moves[i], ups[i]);
             var value = pp[i];
+            if (value > healed && pk is PK4 { IsExpandedLegalityView: true })
+                continue; // the game's own move PP table differs from retail HeartGold's (e.g. Vine Whip 25 vs 10); the retail view cannot judge it
             if (value > healed)
             {
                 data.AddLine(GetInvalid(MovePPTooHigh_01, (ushort)(i + 1), (ushort)value));

@@ -9,11 +9,12 @@ Extract `AutoModPlugins.dll` into the `plugins` folder beside PKHeX.exe (Propert
 ## What it does for Psyduck Yellow saves
 Legalizing (Tools > Auto-Legality Mod, and Set Legal) builds the Pokémon from the game's own encounters, found by species ID:
 - **Starter Psyduck/Eevee line** (1561–1564 and the starter Eeveelutions/Novareon 1565–1582) always come from the Pallet Town starter gift. They are recognised by their own species IDs; nothing else can be them.
-- **Togepi** comes from the Pallet gift. Other Kanto wild Pokémon come from the game's wild areas, with the matching met location, level and PID.
+- **Togepi** comes from the Pallet gift. The three Kanto starter gifts (Bulbasaur, Charmander and Squirtle lines) come from their town gifts (level 10). Other wild Pokémon come from the game's wild areas (Kanto, and the post-Hall-of-Fame tables), with the matching met location, level and PID.
+- **Legendary Pokémon** (updated with the ROM 0255 tables): Celebi, Regirock, Regice, Registeel, Uxie, Mesprit and Azelf come from their themed spots; Kyogre, Groudon, Rayquaza and the daily Embedded Tower pool (Mew, Jirachi, Deoxys, Heatran, Regigigas, Cresselia, Phione, Manaphy, Darkrai, Shaymin, Arceus) come from the Embedded Tower. They are wild battles at level 60 + 5 per Johto badge, so the generated level is 60 to 100 in steps of 5; a request for a lower level or for a species that is not in the pool fails instead of inventing a source.
 - A plain Psyduck or Eevee can't be the starter gift. If the game has no source for a request (e.g. a non-starter Eevee), it fails instead of inventing one.
 - The Easter-egg fallback is disabled for these saves. Other games use the normal ALM path.
 
-Not covered yet: Showdown imports can't name the starter species (use Set Legal on the Pokémon itself), static encounters other than the starters, gifts, trades, eggs and Headbutt trees.
+Not covered yet: Showdown imports can't name the starter species (use Set Legal on the Pokémon itself), static encounters other than the starters and the legendaries above, other gifts, trades, eggs and Headbutt trees.
 
 ## Source and license
 Based on https://github.com/santacrab2/PKHeX-Plugins commit 90410f2681a0a72680d12280a1e0f14715e67dff. Original LICENSE and notices are retained. Build with .NET SDK 10:
