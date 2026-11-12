@@ -171,8 +171,12 @@ public static partial class PsyduckYellowExpanded
         {
             clone.Version = GameVersion.HG;
             // ROM 0233 stamps every gift in a Cherish Ball and gives the Kanto starter gifts the Classic Ribbon (the Oak's Lab aide checks it); retail has neither for these, so the view shows a Poke Ball and no Classic Ribbon.
-            if (clone.BallDPPt == (byte)Ball.Cherish) clone.BallDPPt = (byte)Ball.Poke;
-            if (clone.BallHGSS == (byte)Ball.Cherish) clone.BallHGSS = (byte)Ball.Poke;
+            // Some gifts carry the Cherish Ball in both ball bytes, others only in the D/P/Pt byte; a game-created Pokémon needs both bytes equal.
+            if (clone.BallDPPt == (byte)Ball.Cherish || clone.BallHGSS == (byte)Ball.Cherish)
+            {
+                clone.BallDPPt = (byte)Ball.Poke;
+                clone.BallHGSS = (byte)Ball.Poke;
+            }
             if (IsKantoStarterLine(species)) clone.RibbonClassic = false;
         }
         view = clone;
