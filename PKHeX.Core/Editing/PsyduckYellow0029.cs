@@ -51,8 +51,20 @@ public static partial class PsyduckYellow0029
     public static readonly EncounterStatic4[] KantoGifts =
     [
         CreateKantoGift(1, 141), CreateKantoGift(4, 172), CreateKantoGift(7, 143),
+        // Scripted gifts found by scanning the game's scripts (ROM 0256): the Dojo's Hitmonlee / Hitmonchan, a Tentacool, the level 5 Treecko and level 1 Torchic gifts, the level 1 Palkia / Giratina
+        CreateKantoGift(106, 148, 30), CreateKantoGift(107, 148, 30), CreateKantoGift(72, 130, 15),
+        CreateKantoGift(252, 148, 5), CreateKantoGift(255, 153, 1), CreateKantoGift(484, 231, 1), CreateKantoGift(487, 231, 1), CreateKantoGift(483, 231, 1),
+        CreateKantoGift(152, 126, 5), CreateKantoGift(155, 126, 5), CreateKantoGift(158, 126, 5), // the Johto starter gifts
+        CreateStaticBattle(143, 160, 50), // Snorlax, level 50
+        CreateStaticBattle(144, 203, 50), CreateStaticBattle(145, 158, 50), CreateStaticBattle(146, 221, 50), CreateStaticBattle(150, 199, 70), // Articuno, Zapdos, Moltres (Victory Road) and Mewtwo at Yellow's levels
         CreateKantoGift(129, 151, 5), // the Magikarp salesman in the Mt. Moon Pokémon Center: level 5, bought (any Gyarados line Pokémon can come from it)
     ];
+    private static EncounterStatic4 CreateStaticBattle(ushort species, byte location, byte level) => new(GameVersion.HG)
+    {
+        Species = species, Level = level, Location = location, IsPsyduckYellowLegendary = true,
+        GroundTile = GroundTileAllowed.None | GroundTileAllowed.Sand | GroundTileAllowed.Grass | GroundTileAllowed.Rock | GroundTileAllowed.Cave | GroundTileAllowed.Water
+                   | GroundTileAllowed.Snow | GroundTileAllowed.Ice | GroundTileAllowed.Building | GroundTileAllowed.Marsh | GroundTileAllowed.Max_Pt,
+    };
     private static EncounterStatic4 CreateKantoGift(ushort species, byte location, byte level = 10) => new(GameVersion.HG)
     {
         Species = species, Level = level, Location = location, FixedBall = Ball.Poke,
@@ -67,6 +79,9 @@ public static partial class PsyduckYellow0029
         [
             ((ushort)Species.Celebi, 214), ((ushort)Species.Regirock, 210), ((ushort)Species.Regice, 217), ((ushort)Species.Registeel, 216),
             ((ushort)Species.Uxie, 209), ((ushort)Species.Mesprit, 135), ((ushort)Species.Azelf, 210),
+            // static battles with the same scaled level (60 + 5 per Johto badge), found by scanning the game's scripts: Suicune, Moltres, the Rocket HQ Electrodes, Sudowoodo, Lapras, the Lake of Rage Gyarados
+            ((ushort)Species.Suicune, 206), ((ushort)Species.Moltres, 219), ((ushort)Species.Electrode, 213), ((ushort)Species.Sudowoodo, 184),
+            ((ushort)Species.Lapras, 210), ((ushort)Species.Gyarados, 135), ((ushort)Species.Lugia, 218), ((ushort)Species.HoOh, 205),
         ];
         ushort[] tower =
         [

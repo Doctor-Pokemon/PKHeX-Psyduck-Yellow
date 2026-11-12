@@ -120,8 +120,8 @@ public sealed record EncounterSlot4(EncounterArea4 Parent, ushort Species, byte 
         if (Form != evo.Form && Species is not (int)Core.Species.Burmy)
         {
             // Unown forms are random, not specific form IDs
-            if (!IsRandomUnspecificForm)
-                return false;
+            if (!IsRandomUnspecificForm && !(Species == (int)Core.Species.Unown && pk is PK4 { IsExpandedLegalityView: true }))
+                return false; // Psyduck Yellow: Unown comes in every form
         }
 
         if (pk.Format == 4)

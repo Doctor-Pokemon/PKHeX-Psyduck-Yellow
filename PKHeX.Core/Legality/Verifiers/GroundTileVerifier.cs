@@ -17,7 +17,7 @@ public sealed class GroundTileVerifier : Verifier
         if (data.Entity is not IGroundTile e)
             return;
         var enc = data.EncounterMatch;
-        bool valid = IsGroundTileValid(enc, e);
+        bool valid = data.Entity is PK4 { IsExpandedLegalityView: true } || IsGroundTileValid(enc, e); // Psyduck Yellow: the game's tiles do not follow retail's area types
         var result = !valid ? GetInvalid(EncTypeMismatch) : GetValid(EncTypeMatch);
         data.AddLine(result);
     }

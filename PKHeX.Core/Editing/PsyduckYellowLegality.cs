@@ -13,8 +13,8 @@ public static class PsyduckYellowLegality
     /// <summary>Judge every Psyduck Yellow Pokémon with the game's own tables, even those the retail Generation 4 view could describe (used by the self-consistency tests).</summary>
     public static bool ForceOwnRules { get; set; }
 
-    /// <summary>Eggs and nameless species stay unjudged for now.</summary>
-    internal static bool CanAnalyze(PK4 pk) => !pk.IsEgg && pk.Species != 0;
+    /// <summary>Everything with a species is judged (eggs included).</summary>
+    internal static bool CanAnalyze(PK4 pk) => pk.Species != 0;
 
     internal static void Analyze(LegalityAnalysis la, PK4 pk)
     {
@@ -30,8 +30,14 @@ public static class PsyduckYellowLegality
         // Several encounters can match (different stages of the same line); keep the one under which the evolution and every move work.
         var best = FindBest(pk);
         var path = best.Path;
+        var fromEgg = best.FromEgg;
         var id = CheckIdentifier.Encounter;
-        if (best.Encounter is null)
+        if (best.Encounter is null && !PsyduckYellowEncounterSearch.Search(species).Any())
+        {
+            // Species the game hands out through scripts whose data is not tabled (Safari Zone, fossils, prizes, roaming legendaries ...): nothing to match the place against, the rest is still checked.
+            la.AddLine(Severity.Valid, LegalityCheckResultCode.EncCondition, id);
+        }
+        else if (best.Encounter is null)
         {
             la.AddLine(Severity.Invalid, LegalityCheckResultCode.EncInvalid, id);
         }
@@ -46,7 +52,7 @@ public static class PsyduckYellowLegality
             la.AddLine(Severity.Invalid, LegalityCheckResultCode.LevelMetBelow, CheckIdentifier.Level);
 
         // 2. Moves
-        var moveResults = GetMoveResults(pk, path);
+        var moveResults = GetMoveResults(pk, path, fromEgg);
         for (int i = 0; i < moveResults.Length; i++)
             info.Moves[i] = moveResults[i];
         for (int i = 0; i < info.Relearn.Length; i++)
@@ -78,21 +84,44 @@ public static class PsyduckYellowLegality
             la.AddLine(Severity.Invalid, LegalityCheckResultCode.ItemUnreleased, CheckIdentifier.HeldItem);
     }
 
-    private static (IEncounterable? Encounter, List<ushort> Path, int MinLevel) FindBest(PK4 pk)
+    private static (IEncounterable? Encounter, List<ushort> Path, int MinLevel, bool FromEgg) FindBest(PK4 pk)
     {
         var species = pk.Species;
-        (IEncounterable? Encounter, List<ushort> Path, int MinLevel) best = (null, [species], 0);
+        (IEncounterable? Encounter, List<ushort> Path, int MinLevel, bool FromEgg) best = (null, [species], 0, false);
         int bestScore = int.MaxValue;
+        if (pk.IsEgg)
+        {
+            // an egg is always the base species of its line
+            if (PsyduckYellowExpanded.GetDirectPreEvolutions(species).Length == 0)
+                best = (new EncounterEgg4(species, GameVersion.HG), [species], 0, true);
+            return best;
+        }
+        if (pk.EggLocationExtended != 0)
+        {
+            // hatched: it started as the base species of its line, with the egg moves of that species
+            foreach (var root in PsyduckYellowExpanded.GetLine(species))
+            {
+                if (PsyduckYellowExpanded.GetDirectPreEvolutions(root).Length != 0 || !PsyduckYellowExpanded.TryGetPath(root, species, out var eggPath, out var eggMin))
+                    continue;
+                var eggScore = (pk.CurrentLevel >= eggMin ? 0 : 100) + GetMoveResults(pk, eggPath, true).Count(r => !r.Valid);
+                if (eggScore >= bestScore)
+                    continue;
+                best = (new EncounterEgg4(root, GameVersion.HG), eggPath, eggMin, true);
+                bestScore = eggScore;
+            }
+            if (bestScore == 0)
+                return best;
+        }
         foreach (var enc in PsyduckYellowEncounterSearch.Search(species))
         {
             if (enc is not IEncounterable e || !IsMatch(enc, pk))
                 continue;
             if (!PsyduckYellowExpanded.TryGetPath(enc.Species, species, out var path, out var min))
                 continue;
-            var score = (pk.CurrentLevel >= min ? 0 : 100) + GetMoveResults(pk, path).Count(r => !r.Valid);
+            var score = (pk.CurrentLevel >= min ? 0 : 100) + GetMoveResults(pk, path, false).Count(r => !r.Valid);
             if (score >= bestScore)
                 continue;
-            best = (e, path, min);
+            best = (e, path, min, false);
             bestScore = score;
             if (score == 0)
                 break;
@@ -106,13 +135,13 @@ public static class PsyduckYellowLegality
             return false;
         return enc switch
         {
-            EncounterSlot4 slot => slot.Location == pk.MetLocation && pk.MetLevel >= slot.LevelMin && pk.MetLevel <= slot.LevelMax,
+            EncounterSlot4 slot => slot.Location == pk.MetLocation && pk.MetLevel >= slot.LevelMin, // no upper bound: the game raises wild levels as the player progresses
             EncounterStatic4 st => st.Location == pk.MetLocation && st.Level == pk.MetLevel,
             _ => false,
         };
     }
 
-    private static MoveResult[] GetMoveResults(PK4 pk, List<ushort> path)
+    private static MoveResult[] GetMoveResults(PK4 pk, List<ushort> path, bool fromEgg)
     {
         var results = new MoveResult[4];
         Span<ushort> moves = [pk.Move1, pk.Move2, pk.Move3, pk.Move4];
@@ -124,13 +153,15 @@ public static class PsyduckYellowLegality
             else if (moves[..i].Contains(move))
                 results[i] = MoveResult.Duplicate;
             else
-                results[i] = move < PsyduckYellowExpanded.MoveNames.Length ? FindSource(pk, path, move) : MoveResult.Unobtainable();
+                results[i] = move < PsyduckYellowExpanded.MoveNames.Length ? FindSource(pk, path, move, fromEgg) : MoveResult.Unobtainable();
         }
         return results;
     }
 
-    private static MoveResult FindSource(PK4 pk, List<ushort> path, ushort move)
+    private static MoveResult FindSource(PK4 pk, List<ushort> path, ushort move, bool fromEgg)
     {
+        if (fromEgg && System.MemoryExtensions.Contains(PsyduckYellowExpanded.GetEggMoves(path[0]), move))
+            return new MoveResult(LearnMethod.EggMove, LearnEnvironment.HGSS);
         foreach (var s in path)
         {
             if (s >= PsyduckYellowExpanded.Learnsets.Length)

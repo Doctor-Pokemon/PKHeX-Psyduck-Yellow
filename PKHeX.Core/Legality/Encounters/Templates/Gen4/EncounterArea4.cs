@@ -128,9 +128,12 @@ public sealed record EncounterArea4 : IEncounterArea<EncounterSlot4>, IGroundTyp
         58, // 20 Floaroma Meadow
     ];
 
-    public static bool IsUnownFormValid(PKM pk, byte form, bool isRuinsOfAlph) => isRuinsOfAlph
-        ?   RuinsOfAlph4.IsFormValid(pk, form)
-        : SolaceonRuins4.IsFormValid(pk, form);
+    public static bool IsUnownFormValid(PKM pk, byte form, bool isRuinsOfAlph)
+    {
+        if (pk is PK4 { IsExpandedLegalityView: true })
+            return true; // Psyduck Yellow: the game's maps and location ids differ from retail, so every Unown form is accepted
+        return isRuinsOfAlph ? RuinsOfAlph4.IsFormValid(pk, form) : SolaceonRuins4.IsFormValid(pk, form);
+    }
 }
 
 /// <summary>

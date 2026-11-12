@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using static System.Buffers.Binary.BinaryPrimitives;
 
 namespace PKHeX.Core;
@@ -48,7 +49,37 @@ public static partial class PsyduckYellowExpanded
             }
             result[i] = edges;
         }
+        AddFormEvolutions(result);
         return result;
+    }
+
+    /// <summary>A form kept under its own internal species id (e.g. a regional form) that nothing evolves into inherits the ways its base species is reached, so its pre-evolutions count for it too.</summary>
+    private static void AddFormEvolutions(EvolutionEdge[][] table)
+    {
+        var hasPre = new bool[table.Length];
+        foreach (var edges in table)
+            foreach (var edge in edges)
+                if (edge.Target < hasPre.Length)
+                    hasPre[edge.Target] = true;
+        var extra = new List<(ushort From, EvolutionEdge Edge)>();
+        for (int b = 1; b < table.Length; b++)
+        {
+            for (int f = 1; f < 32; f++)
+            {
+                var at = b * 32 + f - 1;
+                if ((uint)at >= FormMap.Length || FormMap[at] == 0)
+                    continue;
+                var form = FormMap[at];
+                if (form >= table.Length || form == b || hasPre[form])
+                    continue;
+                for (ushort s = 1; s < table.Length; s++)
+                    foreach (var edge in table[s])
+                        if (edge.Target == b)
+                            extra.Add((s, edge with { Target = form, Form = (byte)f }));
+            }
+        }
+        foreach (var group in extra.GroupBy(x => x.From))
+            table[group.Key] = [.. table[group.Key], .. group.Select(x => x.Edge)];
     }
 
     private static ushort[][] BuildReverse(EvolutionEdge[][] forward)
