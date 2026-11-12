@@ -109,7 +109,7 @@ public sealed class LegalityAnalysis
     /// <param name="source">Details about where the <see cref="Entity"/> originated from.</param>
     public LegalityAnalysis(PKM pk, IPersonalInfo pi, StorageSlotType source = Ignore)
     {
-        if (pk is PK4 { IsExpandedEngine: true } expanded && PsyduckYellowExpanded.TryGetRetailView(expanded, out var view))
+        if (pk is PK4 { IsExpandedEngine: true } expanded && !PsyduckYellowLegality.ForceOwnRules && PsyduckYellowExpanded.TryGetRetailView(expanded, out var view))
         {
             pk = view; // Kanto campaign Pokémon within the Gen4 catalog: HeartGold's rules plus the starter rules
             pi = view.PersonalInfo;
@@ -123,6 +123,15 @@ public sealed class LegalityAnalysis
         {
             // Uses species, moves, abilities or items beyond the retail Generation 4 catalogs, which do not describe them.
             // Keep editing available without manufacturing an official legality verdict.
+            if (pk is PK4 py && PsyduckYellowLegality.CanAnalyze(py))
+            {
+                // The game's own tables judge it (species, moves, abilities or items newer than Generation 4).
+                PsyduckYellowLegality.Analyze(this, py);
+                Info.SetEmptyEvolutionHistory();
+                Parsed = true;
+                Valid = AssertValid();
+                return;
+            }
             EnsureMovesPopulated();
             Parsed = false;
             Valid = false;

@@ -45,6 +45,8 @@ public sealed class LegalInfo : IGeneration
     public readonly MoveResult[] Moves = new MoveResult[MoveCount];
 
     public EvolutionHistory EvoChainsAllGens => _evochains ??= EvolutionChain.GetEvolutionChainsAllGens(Entity, EncounterMatch);
+    /// <summary>Psyduck Yellow: the retail evolution chains cannot describe the game's own species, so none are kept.</summary>
+    internal void SetEmptyEvolutionHistory() => _evochains = new EvolutionHistory();
     private EvolutionHistory? _evochains;
 
     /// <summary>RNG related information that generated the <see cref="PKM.PID"/>/<see cref="PKM.IVs"/> value(s).</summary>

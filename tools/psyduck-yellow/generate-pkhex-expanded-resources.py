@@ -18,7 +18,7 @@ for i,v in enumerate(items):
   pocket=(struct.unpack_from('<H',v,8)[0]>>7)&15
   if pocket<8:pockets[pocket].append(i)
 # Metadata is derived from released0038, never from retail national-index assumptions.
-abilities12=[struct.unpack_from('<2H',v,22) for v in personal];hidden=list(struct.unpack_from('<'+'H'*(len(addons[7])//2),addons[7]))[:len(personal)]
+abilities12=[(struct.unpack_from('<H',v,22)[0],struct.unpack_from('<H',v,26)[0]) for v in personal];hidden=list(struct.unpack_from('<'+'H'*(len(addons[7])//2),addons[7]))[:len(personal)]
 forms=list(struct.unpack_from('<'+'H'*(len(addons[11])//2),addons[11]));converted=bytearray()
 for v in personal:
  b=bytearray(v);b[22]=v[22];b[23]=v[24];b[24]=v[26];b[25]=v[27];b[26:44]=bytes(18);converted+=b

@@ -12,11 +12,8 @@ public static class PsyduckYellowEncounterSearch
     public static IEnumerable<IEncounterInfo> Search(ushort species)
     {
         var baseSpecies = PsyduckYellowExpanded.GetRetailSpecies(species);
-        var tree = EvolutionTree.PsyduckYellow0029;
-        // The species itself and its pre-evolutions only (an evolved Pokémon can't turn back).
-        var allowed = new HashSet<ushort> { baseSpecies };
-        foreach (var (pre, _) in tree.Reverse.GetPreEvolutions(baseSpecies, 0))
-            allowed.Add(pre);
+        // The species itself and its pre-evolutions only (an evolved Pokémon can't turn back), from the game's own evolution table.
+        var allowed = new HashSet<ushort>(PsyduckYellowExpanded.GetLine(baseSpecies));
         bool Matches(ushort s) => allowed.Contains(s);
 
         foreach (var starter in PsyduckYellow0029.StartersExpanded)
@@ -53,9 +50,8 @@ public static class PsyduckYellowEncounterSearch
     {
         if (moves.Count == 0)
             return Search(species);
-        var tree = EvolutionTree.PsyduckYellow0029;
         var target = PsyduckYellowExpanded.GetRetailSpecies(species);
-        return Search(species).Where(enc => CanKnowAll(enc.Species, moves, tree, target));
+        return Search(species).Where(enc => CanKnowAll(enc.Species, moves, target));
     }
 
     /// <summary>Same as <see cref="SearchAll()"/> but only encounters whose Pokémon (or an evolution of it) can know every given move.</summary>
@@ -63,18 +59,20 @@ public static class PsyduckYellowEncounterSearch
     {
         if (moves.Count == 0)
             return SearchAll();
-        var tree = EvolutionTree.PsyduckYellow0029;
-        return SearchAll().Where(enc => CanKnowAll(enc.Species, moves, tree, 0));
+        return SearchAll().Where(enc => CanKnowAll(enc.Species, moves, 0));
     }
 
-    private static bool CanKnowAll(ushort encounterSpecies, IReadOnlyList<ushort> moves, EvolutionTree tree, ushort target)
+    private static bool CanKnowAll(ushort encounterSpecies, IReadOnlyList<ushort> moves, ushort target)
     {
         // The Pokémon of the encounter and the evolutions it can still reach (only those on the way to the searched species when one is given).
         var line = new List<ushort> { encounterSpecies };
-        foreach (var (evo, _) in tree.Forward.GetEvolutions(encounterSpecies, 0))
+        for (int i = 0; i < line.Count; i++)
         {
-            if (target == 0 || evo == target || IsPreEvolutionOf(tree, evo, target))
-                line.Add(evo);
+            foreach (var edge in PsyduckYellowExpanded.GetEvolutions(line[i]))
+            {
+                if (!line.Contains(edge.Target) && (target == 0 || edge.Target == target || PsyduckYellowExpanded.TryGetPath(edge.Target, target, out _, out _)))
+                    line.Add(edge.Target);
+            }
         }
         foreach (var move in moves)
         {
@@ -91,16 +89,6 @@ public static class PsyduckYellowEncounterSearch
                 return false;
         }
         return true;
-    }
-
-    private static bool IsPreEvolutionOf(EvolutionTree tree, ushort species, ushort target)
-    {
-        foreach (var (pre, _) in tree.Reverse.GetPreEvolutions(target, 0))
-        {
-            if (pre == species)
-                return true;
-        }
-        return false;
     }
 
     private static bool CanLearn(ushort species, ushort move)
