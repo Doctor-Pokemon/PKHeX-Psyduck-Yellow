@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PKHeX.Core;
 
@@ -45,6 +46,68 @@ public static class PsyduckYellowEncounterSearch
                     yield return slot;
             }
         }
+    }
+
+    /// <summary>Encounters of the species (or its pre-evolutions) whose Pokémon can know every given move: by level-up, TM/HM or move tutor, as itself or as one of its evolutions up to the searched species (the game's own data).</summary>
+    public static IEnumerable<IEncounterInfo> Search(ushort species, IReadOnlyList<ushort> moves)
+    {
+        if (moves.Count == 0)
+            return Search(species);
+        var tree = EvolutionTree.PsyduckYellow0029;
+        var target = PsyduckYellowExpanded.GetRetailSpecies(species);
+        return Search(species).Where(enc => CanKnowAll(enc.Species, moves, tree, target));
+    }
+
+    /// <summary>Same as <see cref="SearchAll()"/> but only encounters whose Pokémon (or an evolution of it) can know every given move.</summary>
+    public static IEnumerable<IEncounterInfo> SearchAll(IReadOnlyList<ushort> moves)
+    {
+        if (moves.Count == 0)
+            return SearchAll();
+        var tree = EvolutionTree.PsyduckYellow0029;
+        return SearchAll().Where(enc => CanKnowAll(enc.Species, moves, tree, 0));
+    }
+
+    private static bool CanKnowAll(ushort encounterSpecies, IReadOnlyList<ushort> moves, EvolutionTree tree, ushort target)
+    {
+        // The Pokémon of the encounter and the evolutions it can still reach (only those on the way to the searched species when one is given).
+        var line = new List<ushort> { encounterSpecies };
+        foreach (var (evo, _) in tree.Forward.GetEvolutions(encounterSpecies, 0))
+        {
+            if (target == 0 || evo == target || IsPreEvolutionOf(tree, evo, target))
+                line.Add(evo);
+        }
+        foreach (var move in moves)
+        {
+            bool known = false;
+            foreach (var s in line)
+            {
+                if (CanLearn(s, move))
+                {
+                    known = true;
+                    break;
+                }
+            }
+            if (!known)
+                return false;
+        }
+        return true;
+    }
+
+    private static bool IsPreEvolutionOf(EvolutionTree tree, ushort species, ushort target)
+    {
+        foreach (var (pre, _) in tree.Reverse.GetPreEvolutions(target, 0))
+        {
+            if (pre == species)
+                return true;
+        }
+        return false;
+    }
+
+    private static bool CanLearn(ushort species, ushort move)
+    {
+        if (species < PsyduckYellowExpanded.Learnsets.Length && System.MemoryExtensions.Contains(PsyduckYellowExpanded.Learnsets[species].GetMoveRange(100), move))
+            return true;
+        return PsyduckYellowExpanded.CanLearnMachine(species, move) || PsyduckYellowExpanded.CanLearnTutor(species, move);
     }
 
     /// <summary>Every encounter of the game (each listed once), for a search with no species chosen.</summary>

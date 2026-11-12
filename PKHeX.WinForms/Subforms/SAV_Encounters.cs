@@ -358,11 +358,12 @@ public partial class SAV_Encounters : Form
         // If nothing is specified, instead of just returning all possible encounters, just return nothing.
         if (!IsSearchAllowed(settings))
             return [];
-        if (SAV is SAV4PY) // the game's own encounters (wild areas, starter and Kanto gifts, legendaries); the move filters are not applied
+        if (SAV is SAV4PY) // the game's own encounters (wild areas, starter and Kanto gifts, legendaries); the move filters use the game's own level-up, TM/HM and tutor data
         {
             if (settings.Version is not (0 or GameVersion.PY))
                 return [];
-            return settings.Species == 0 ? PsyduckYellowEncounterSearch.SearchAll() : PsyduckYellowEncounterSearch.Search(settings.Species);
+            var wanted = settings.Moves.ToArray();
+            return settings.Species == 0 ? PsyduckYellowEncounterSearch.SearchAll(wanted) : PsyduckYellowEncounterSearch.Search(settings.Species, wanted);
         }
         var pk = SAV.BlankPKM;
 
