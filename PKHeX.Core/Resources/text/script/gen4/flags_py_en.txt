@@ -392,3 +392,11 @@
 0xA55	g	Oak's Lab aide: Charizardite X given
 0xA56	g	Oak's Lab aide: Charizardite Y given
 0xA57	g	Oak's Lab aide: Blastoisinite given
+0xAC0	h	Legendary spot hidden (recomputed on map entry): Celebi (Ilex Forest)
+0xAC1	h	Legendary spot hidden (recomputed on map entry): Regirock (Union Cave)
+0xAC2	h	Legendary spot hidden (recomputed on map entry): Regice (Ice Path)
+0xAC3	h	Legendary spot hidden (recomputed on map entry): Registeel (Mt. Mortar)
+0xAC4	h	Legendary spot hidden (recomputed on map entry): Uxie (Ruins of Alph)
+0xAC5	h	Legendary spot hidden (recomputed on map entry): Mesprit (Lake of Rage)
+0xAC6	h	Legendary spot hidden (recomputed on map entry): Azelf (Union Cave)
+0xAC7	h	Embedded Tower: legendary visitor hidden (recomputed on map entry)
