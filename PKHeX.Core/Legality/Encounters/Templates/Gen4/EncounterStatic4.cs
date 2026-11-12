@@ -22,6 +22,8 @@ public sealed record EncounterStatic4(GameVersion Version)
     public Ball FixedBall { get; init; }
     public bool FatefulEncounter { get; init; }
     public bool IsPsyduckYellowStarter { get; init; }
+    /// <summary>ROM 0245+ legendary Pokémon: the seven themed spots and the daily Embedded Tower encounter (wild battle at level 60 + 5 per Johto badge, caught in any ball).</summary>
+    public bool IsPsyduckYellowLegendary { get; init; }
 
     public required ushort Species { get; init; }
     public required byte Level { get; init; }
@@ -32,7 +34,7 @@ public sealed record EncounterStatic4(GameVersion Version)
     public ushort EggLocation { get; init; }
     public byte Gender { get; init; } = FixedGenderUtil.GenderRandom;
 
-    public string Name => IsPsyduckYellowStarter ? "Psyduck Yellow 0029 starter gift" : "Static Encounter";
+    public string Name => IsPsyduckYellowStarter ? "Psyduck Yellow 0029 starter gift" : IsPsyduckYellowLegendary ? "Psyduck Yellow legendary encounter" : "Static Encounter";
     public string LongName => Name;
     public byte LevelMin => Level;
     public byte LevelMax => Level;
@@ -391,7 +393,7 @@ public sealed record EncounterStatic4(GameVersion Version)
 
     public RandomCorrelationRating IsCompatible(PIDType type, PKM pk)
     {
-        if (IsPsyduckYellowStarter && PsyduckYellow0029.IsEnabled(pk))
+        if ((IsPsyduckYellowStarter || IsPsyduckYellowLegendary) && PsyduckYellow0029.IsEnabled(pk))
             return Match;
         if (Species == (int)Core.Species.Pichu)
             return type is PIDType.Pokewalker ? Match : Mismatch;

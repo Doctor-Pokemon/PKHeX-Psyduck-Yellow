@@ -81,6 +81,21 @@ public sealed class EncounterGenerator4 : IEncounterGenerator
             }
             if (isStarterLine)
                 yield break;
+            if (isExpanded)
+            {
+                // ROM 0245+ legendary spots and the daily Embedded Tower encounter (wild battles caught in any ball).
+                foreach (var legend in PsyduckYellow0029.Legendaries)
+                {
+                    foreach (var evo in chain)
+                    {
+                        if (evo.Species != legend.Species || !legend.IsMatchExact(pk, evo))
+                            continue;
+                        info.PIDIV = default;
+                        yield return legend;
+                        yield break;
+                    }
+                }
+            }
         }
         info.PIDIV = MethodFinder.Analyze(pk);
         var game = pk.Version;
