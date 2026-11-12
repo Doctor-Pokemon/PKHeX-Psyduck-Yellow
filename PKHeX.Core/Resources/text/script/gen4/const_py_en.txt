@@ -67,6 +67,5 @@
 0x4044	s	Card Album: rematch wins 1 (2 bits per entry, Kanto leaders)
 0x4049	s	Card Album: rematch wins 2 (2 bits per entry, Johto leaders)
 0x4031	s	Legendary encounter (Embedded Tower): daily pick = (weekday+1)*256 + pick; 255 = caught today
-0x40F9	s	Embedded Tower orbs: progress	0:Not started,1:Orb due,2:Orb given,4:Kyogre chamber done,5:Jade Orb given by Oak
 0x413E	s	Hall of Fame: first win	0:None,1:Kanto,2:Johto
 0x4107	s	Mr. Pokémon's house: first visit (Mystery Egg errand)	0:Not done,1:Done
