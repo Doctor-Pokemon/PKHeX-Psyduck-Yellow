@@ -63,6 +63,56 @@ public static partial class PsyduckYellowExpanded
         return result;
     }
 
+    private static readonly Lazy<(ushort[] Machine, ushort[] Tutor)[]> MachineData = new(LoadMachine);
+
+    private static (ushort[] Machine, ushort[] Tutor)[] LoadMachine()
+    {
+        // u16 species count; per species: u16 n, n * u16 machine move, u16 m, m * u16 tutor move (the game's own TM/HM and tutor compatibility, read from the ROM)
+        var data = Util.GetBinaryResource("machine_psyduck_expanded");
+        var count = ReadUInt16LittleEndian(data);
+        var result = new (ushort[], ushort[])[count];
+        int pos = 2;
+        for (int i = 0; i < count; i++)
+        {
+            var machine = new ushort[ReadUInt16LittleEndian(data.AsSpan(pos))];
+            pos += 2;
+            for (int m = 0; m < machine.Length; m++, pos += 2)
+                machine[m] = ReadUInt16LittleEndian(data.AsSpan(pos));
+            var tutor = new ushort[ReadUInt16LittleEndian(data.AsSpan(pos))];
+            pos += 2;
+            for (int m = 0; m < tutor.Length; m++, pos += 2)
+                tutor[m] = ReadUInt16LittleEndian(data.AsSpan(pos));
+            result[i] = (machine, tutor);
+        }
+        return result;
+    }
+
+    /// <summary>True if the expanded game lets this (internal) species learn the move from a TM or HM.</summary>
+    public static bool CanLearnMachine(ushort species, ushort move) => species < MachineData.Value.Length && Array.IndexOf(MachineData.Value[species].Machine, move) >= 0;
+
+    /// <summary>True if the expanded game lets this (internal) species learn the move from a move tutor.</summary>
+    public static bool CanLearnTutor(ushort species, ushort move) => species < MachineData.Value.Length && Array.IndexOf(MachineData.Value[species].Tutor, move) >= 0;
+
+    /// <summary>Marks every move the species can learn by TM/HM (<paramref name="machine"/>) or from a tutor, for the move suggestions.</summary>
+    public static void SetAllMachineAndTutor(Span<bool> result, ushort species, bool machine, bool tutor)
+    {
+        if (species >= MachineData.Value.Length)
+            return;
+        var (m, t) = MachineData.Value[species];
+        if (machine)
+        {
+            foreach (var move in m)
+                if (move < result.Length)
+                    result[move] = true;
+        }
+        if (tutor)
+        {
+            foreach (var move in t)
+                if (move < result.Length)
+                    result[move] = true;
+        }
+    }
+
     /// <summary>Move types in PKHeX's numbering (Normal..Steel 0-8, Fire 9 .. Dark 16, Fairy 17), as used by the type icons and names.</summary>
     private static readonly Lazy<byte[]> MoveTypeData = new(() => Array.ConvertAll(MoveTypesEngine, ToDisplayType));
     public static byte[] MoveTypes => MoveTypeData.Value;

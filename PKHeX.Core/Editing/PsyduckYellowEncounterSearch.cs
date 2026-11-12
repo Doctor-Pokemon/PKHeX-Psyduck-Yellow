@@ -18,7 +18,7 @@ public static class PsyduckYellowEncounterSearch
             allowed.Add(pre);
         bool Matches(ushort s) => allowed.Contains(s);
 
-        foreach (var starter in PsyduckYellow0029.Starters)
+        foreach (var starter in PsyduckYellow0029.StartersExpanded)
         {
             if (Matches(starter.Species))
                 yield return starter;

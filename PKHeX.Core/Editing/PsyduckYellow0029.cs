@@ -42,14 +42,20 @@ public static partial class PsyduckYellow0029
     [
         CreateStarter(54), CreateStarter(133), CreateStarter(175),
     ];
+    /// <summary>The Pallet starter gifts of the expanded game: Psyduck and Eevee have a random gender there (saves of the same build hold both a male and a female starter); the 0029 profile keeps its fixed genders.</summary>
+    public static readonly EncounterStatic4[] StartersExpanded =
+    [
+        CreateStarter(54, true), CreateStarter(133, true), CreateStarter(175),
+    ];
     /// <summary>ROM 0233 Kanto starter gifts (Bulbasaur in Cerulean, Charmander on Route 24, Squirtle in Vermilion): level 10, met in those towns; only the expanded profile uses them.</summary>
     public static readonly EncounterStatic4[] KantoGifts =
     [
         CreateKantoGift(1, 141), CreateKantoGift(4, 172), CreateKantoGift(7, 143),
+        CreateKantoGift(129, 151, 5), // the Magikarp salesman in the Mt. Moon Pokémon Center: level 5, bought (any Gyarados line Pokémon can come from it)
     ];
-    private static EncounterStatic4 CreateKantoGift(ushort species, byte location) => new(GameVersion.HG)
+    private static EncounterStatic4 CreateKantoGift(ushort species, byte location, byte level = 10) => new(GameVersion.HG)
     {
-        Species = species, Level = 10, Location = location, FixedBall = Ball.Poke,
+        Species = species, Level = level, Location = location, FixedBall = Ball.Poke,
         GroundTile = GroundTileAllowed.Building | GroundTileAllowed.Max_Pt, IsPsyduckYellowStarter = true,
     };
     /// <summary>ROM 0245+ legendary encounters (expanded profile only). Themed spots: species and met location (the map's location id); the daily Embedded Tower pick and the three orb chambers: location 232.
@@ -87,10 +93,10 @@ public static partial class PsyduckYellow0029
             });
         }
     }
-    private static EncounterStatic4 CreateStarter(ushort species) => new(GameVersion.HG)
+    private static EncounterStatic4 CreateStarter(ushort species, bool randomGender = false) => new(GameVersion.HG)
     {
         Species = species, Level = 5, Location = 138, FixedBall = Ball.Poke,
-        Gender = species switch { 54 => 0, 133 => 1, _ => FixedGenderUtil.GenderRandom },
+        Gender = randomGender ? FixedGenderUtil.GenderRandom : (byte)(species switch { 54 => 0, 133 => 1, _ => FixedGenderUtil.GenderRandom }),
         GroundTile = GroundTileAllowed.Building | GroundTileAllowed.Max_Pt, IsPsyduckYellowStarter = true, // gifted indoors; older builds wrote "Unspecific"
     };
 }

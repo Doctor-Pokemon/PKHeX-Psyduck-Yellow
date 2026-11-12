@@ -66,6 +66,16 @@ public sealed class LearnSource4HGSS : ILearnSource<PersonalInfo4>, IEggSource
                 return new(LevelUp, Game, level);
         }
 
+        if (pk is PK4 { IsExpandedLegalityView: true })
+        {
+            // Psyduck Yellow: the game's own TM/HM and tutor compatibility replaces retail HeartGold's (the Pokémon taught moves in the game with its TMs/HMs).
+            if (types.HasFlag(MoveSourceType.Machine) && PsyduckYellowExpanded.CanLearnMachine(evo.Species, move))
+                return new(TMHM, Game);
+            if (types.HasFlag(MoveSourceType.SpecialTutor) && PsyduckYellowExpanded.CanLearnTutor(evo.Species, move))
+                return new(Tutor, Game);
+            return default;
+        }
+
         if (types.HasFlag(MoveSourceType.Machine))
         {
             if (PsyduckYellow0029.IsEnabled(pk) && PsyduckYellow0029.CanLearnCustomTM(evo.Species, move))
@@ -144,6 +154,12 @@ public sealed class LearnSource4HGSS : ILearnSource<PersonalInfo4>, IEggSource
                 if (move < result.Length) // the expanded game's learnsets include moves newer than Generation 4
                     result[move] = true;
             }
+        }
+
+        if (pk is PK4 { IsExpandedLegalityView: true })
+        {
+            PsyduckYellowExpanded.SetAllMachineAndTutor(result, evo.Species, types.HasFlag(MoveSourceType.Machine), types.HasFlag(MoveSourceType.SpecialTutor));
+            return;
         }
 
         if (types.HasFlag(MoveSourceType.Machine))

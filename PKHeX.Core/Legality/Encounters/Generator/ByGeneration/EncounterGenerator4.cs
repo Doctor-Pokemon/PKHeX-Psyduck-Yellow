@@ -65,7 +65,7 @@ public sealed class EncounterGenerator4 : IEncounterGenerator
             // In Psyduck Yellow the starter Psyduck/Eevee are their own species: only those (and their evolutions) can be the Pallet gift, and nothing else can be them.
             bool isExpanded = pk is PK4 { IsExpandedLegalityView: true };
             bool isStarterLine = pk is PK4 { IsExpandedLegalityView: true } view && PsyduckYellowExpanded.IsStarterSpecies(view.ExpandedSpecies);
-            var candidates = isExpanded ? PsyduckYellow0029.Starters.Concat(PsyduckYellow0029.KantoGifts) : PsyduckYellow0029.Starters;
+            var candidates = isExpanded ? PsyduckYellow0029.StartersExpanded.Concat(PsyduckYellow0029.KantoGifts) : PsyduckYellow0029.Starters;
             foreach (var starter in candidates)
             {
                 if (isExpanded && starter.Species is (ushort)Species.Psyduck or (ushort)Species.Eevee && !isStarterLine)
