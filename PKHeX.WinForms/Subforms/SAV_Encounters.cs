@@ -311,9 +311,18 @@ public partial class SAV_Encounters : Form
             }
         }
 
-        var DS_Version = new List<ComboItem>(source.VersionDataSource);
-        DS_Version.Insert(0, Any);
-        DS_Version.RemoveAt(DS_Version.Count - 1);
+        List<ComboItem> DS_Version;
+        if (SAV is SAV4PY)
+        {
+            // Psyduck Yellow is the only game whose encounters this search knows: "Any" and Psyduck Yellow.
+            DS_Version = [Any, .. filtered.Games.Where(z => z.Value == (int)GameVersion.PY)];
+        }
+        else
+        {
+            DS_Version = new List<ComboItem>(source.VersionDataSource);
+            DS_Version.Insert(0, Any);
+            DS_Version.RemoveAt(DS_Version.Count - 1);
+        }
         CB_GameOrigin.DataSource = DS_Version;
     }
 
@@ -349,8 +358,12 @@ public partial class SAV_Encounters : Form
         // If nothing is specified, instead of just returning all possible encounters, just return nothing.
         if (!IsSearchAllowed(settings))
             return [];
-        if (SAV is SAV4PY) // the game's own Kanto encounters and starters
-            return PsyduckYellowEncounterSearch.Search(settings.Species);
+        if (SAV is SAV4PY) // the game's own encounters (wild areas, starter and Kanto gifts, legendaries); the move filters are not applied
+        {
+            if (settings.Version is not (0 or GameVersion.PY))
+                return [];
+            return settings.Species == 0 ? PsyduckYellowEncounterSearch.SearchAll() : PsyduckYellowEncounterSearch.Search(settings.Species);
+        }
         var pk = SAV.BlankPKM;
 
         var moves = settings.Moves.ToArray();
@@ -391,7 +404,7 @@ public partial class SAV_Encounters : Form
     {
         if (!TypeFilters.Controls.OfType<CheckBox>().Any(z => z.Checked))
             return false; // no types selected
-        if (settings is { Species: 0, Moves.Count: 0 } && Main.Settings.EncounterDb.ReturnNoneIfEmptySearch)
+        if (settings is { Species: 0, Moves.Count: 0 } && Main.Settings.EncounterDb.ReturnNoneIfEmptySearch && !(SAV is SAV4PY && settings.Version == GameVersion.PY))
             return false;
         return true;
     }

@@ -47,6 +47,21 @@ public static class PsyduckYellowEncounterSearch
         }
     }
 
+    /// <summary>Every encounter of the game (each listed once), for a search with no species chosen.</summary>
+    public static IEnumerable<IEncounterInfo> SearchAll()
+    {
+        var seen = new HashSet<IEncounterInfo>(ReferenceEqualityComparer.Instance);
+        var lowest = new HashSet<ushort>();
+        for (ushort species = 1; species < PsyduckYellowExpanded.SpeciesNames.Length; species++)
+        {
+            foreach (var enc in Search(species))
+            {
+                if (enc.Species == PsyduckYellowExpanded.GetRetailSpecies(species) && seen.Add(enc))
+                    yield return enc;
+            }
+        }
+    }
+
     /// <summary>Turns a Pokémon generated from an encounter into a Psyduck Yellow one: game flags, the starter's own species, the game's name casing.</summary>
     public static void AdaptToGame(PK4 pk, IEncounterInfo source)
     {
@@ -58,6 +73,19 @@ public static class PsyduckYellowEncounterSearch
                 pk.Species = PsyduckYellowExpanded.StarterPsyduck;
             else if (pk.Species == (ushort)Species.Eevee)
                 pk.Species = PsyduckYellowExpanded.StarterEevee;
+        }
+        if (source is EncounterStatic4 { IsPsyduckYellowLegendary: true } && pk.Species < PsyduckYellowExpanded.Learnsets.Length)
+        {
+            // The encounter generator knows retail HeartGold's level-up moves; the game's own table differs for these Pokémon.
+            var moves = new List<ushort>();
+            foreach (var move in PsyduckYellowExpanded.Learnsets[pk.Species].GetMoveRange(pk.CurrentLevel))
+            {
+                if (move <= Legal.MaxMoveID_4 && !moves.Contains(move))
+                    moves.Add(move);
+            }
+            var last = moves.Count > 4 ? moves.GetRange(moves.Count - 4, 4) : moves;
+            pk.SetMoves(last.Count == 4 ? [last[0], last[1], last[2], last[3]] : [.. last, .. new ushort[4 - last.Count]]);
+            pk.HealPP();
         }
         if (!pk.IsNicknamed && pk.Species < PsyduckYellowExpanded.SpeciesNames.Length)
             pk.Nickname = PsyduckYellowExpanded.SpeciesNames[pk.Species];
