@@ -19543,4 +19543,40 @@
   <data name="a_py9" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\img\Artwork Pokemon Sprites\a_py9.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="b_py10" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\img\Big Pokemon Sprites\b_py10.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="b_py10s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\img\Big Shiny Sprites\b_py10s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="a_py10" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\img\Artwork Pokemon Sprites\a_py10.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="b_py11" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\img\Big Pokemon Sprites\b_py11.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="b_py11s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\img\Big Shiny Sprites\b_py11s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="a_py11" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\img\Artwork Pokemon Sprites\a_py11.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="b_py12" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\img\Big Pokemon Sprites\b_py12.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="b_py12s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\img\Big Shiny Sprites\b_py12s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="a_py12" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\img\Artwork Pokemon Sprites\a_py12.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="b_py13" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\img\Big Pokemon Sprites\b_py13.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="b_py13s" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\img\Big Shiny Sprites\b_py13s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="a_py13" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\img\Artwork Pokemon Sprites\a_py13.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

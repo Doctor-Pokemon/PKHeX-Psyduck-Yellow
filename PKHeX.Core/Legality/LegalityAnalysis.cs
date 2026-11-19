@@ -111,8 +111,19 @@ public sealed class LegalityAnalysis
     {
         if (pk is PK4 { IsExpandedEngine: true } expanded && !PsyduckYellowLegality.ForceOwnRules && PsyduckYellowExpanded.TryGetRetailView(expanded, out var view))
         {
-            pk = view; // Kanto campaign Pokémon within the Gen4 catalog: HeartGold's rules plus the starter rules
-            pi = view.PersonalInfo;
+            bool useView = true;
+            if (!new LegalityAnalysis(view, view.PersonalInfo, source).Valid)
+            {
+                // Retail HeartGold's encounter lists do not know every source of this game (roamers, eggs of species without a retail match, ...): the game's own tables get the last word.
+                PsyduckYellowLegality.ForceOwnRules = true;
+                try { useView = !new LegalityAnalysis(expanded, expanded.PersonalInfo, source).Valid; }
+                finally { PsyduckYellowLegality.ForceOwnRules = false; }
+            }
+            if (useView)
+            {
+                pk = view; // Kanto campaign Pokémon within the Gen4 catalog: HeartGold's rules plus the starter rules
+                pi = view.PersonalInfo;
+            }
         }
         Entity = pk;
         PersonalInfo = pi;

@@ -21,6 +21,11 @@ public static partial class PsyduckYellowExpanded
     public static EvolutionEdge[] GetEvolutions(ushort species) => species < EvolutionData.Value.Length ? EvolutionData.Value[species] : [];
 
     /// <summary>The species that evolve directly into the given one.</summary>
+    /// <summary>The species can come out of an egg of the game's shared Day Care: the base species of its line (babies included) whose egg group is not Undiscovered. The starter line never breeds.</summary>
+    public static bool CanHatch(ushort species)
+        => species != 0 && species < Personal.Count && GetDirectPreEvolutions(species).Length == 0 && !IsStarterSpecies(species)
+           && Personal[species].EggGroup1 != 15 && Personal[species].EggGroup2 != 15;
+
     public static ushort[] GetDirectPreEvolutions(ushort species) => species < PreEvolutionData.Value.Length ? PreEvolutionData.Value[species] : [];
 
     private static EvolutionEdge[][] LoadEvolutions()

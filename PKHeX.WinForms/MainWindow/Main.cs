@@ -1140,11 +1140,6 @@ public partial class Main : Form
 
     private void DisplayLegalityReport(LegalityAnalysis la)
     {
-        if (la.Info.Entity is PK4 { IsExpandedEngine: true })
-        {
-            WinFormsUtil.Alert("Retail legality checking is unavailable for the Psyduck Yellow expanded engine. Species, moves, items and abilities use the data extracted from prototype 0038. Editing and exporting are supported; this is not an official legality verdict.");
-            return;
-        }
         if (Settings.Sounds.PlaySoundLegalityCheck)
             SystemSounds.Asterisk.Play();
 

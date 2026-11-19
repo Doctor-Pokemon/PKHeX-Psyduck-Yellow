@@ -32,6 +32,18 @@ public static class PsyduckYellowEncounterSearch
             if (Matches(legend.Species))
                 yield return legend;
         }
+        foreach (var roamer in PsyduckYellow0029.Roamers)
+        {
+            if (Matches(roamer.Species))
+                yield return roamer;
+        }
+
+        // Eggs from the shared Day Care: the base species of the line (Generation 1-4 species only; the egg template needs the retail data tables)
+        foreach (var root in allowed)
+        {
+            if (root <= Legal.MaxSpeciesID_4 && PsyduckYellowExpanded.CanHatch(root))
+                yield return new EncounterEgg4(root, GameVersion.HG);
+        }
 
         // Wild areas repeat each slot for every time of day and slot number; list each distinct place/level once.
         var seen = new HashSet<(byte Location, SlotType4 Type, ushort Species, byte Min, byte Max)>();
@@ -116,8 +128,17 @@ public static class PsyduckYellowEncounterSearch
     /// <summary>Turns a Pokémon generated from an encounter into a Psyduck Yellow one: game flags, the starter's own species, the game's name casing.</summary>
     public static void AdaptToGame(PK4 pk, IEncounterInfo source)
     {
+        var level = pk.CurrentLevel; // the level was set under retail rules; set it again once the game's own experience curve applies
         pk.IsExpandedEngine = true;
         pk.IsPsyduckYellow0029 = true;
+        pk.CurrentLevel = level;
+        if (pk.Species < PsyduckYellowExpanded.Personal.Count && pk.Species > Legal.MaxSpeciesID_4)
+        {
+            // Generation 5+ guests: the ability comes from the game's own personal data for the slot the PID selects
+            var pi = PsyduckYellowExpanded.Personal[pk.Species];
+            pk.Ability = pk.AbilityNumber switch { 4 => pi.EngineHiddenAbility, 2 => pi.EngineAbility2, _ => pi.EngineAbility1 };
+            pk.Gender = EntityGender.GetFromPIDAndRatio(pk.PID, pi.Gender);
+        }
         if (source is EncounterStatic4 { IsPsyduckYellowStarter: true })
         {
             if (pk.Species == (ushort)Species.Psyduck)
@@ -125,13 +146,13 @@ public static class PsyduckYellowEncounterSearch
             else if (pk.Species == (ushort)Species.Eevee)
                 pk.Species = PsyduckYellowExpanded.StarterEevee;
         }
-        if (source is EncounterStatic4 { IsPsyduckYellowLegendary: true } && pk.Species < PsyduckYellowExpanded.Learnsets.Length)
+        if ((source is EncounterStatic4 { IsPsyduckYellowLegendary: true } || pk.Move1 == 0) && pk.Species < PsyduckYellowExpanded.Learnsets.Length) // legendaries and species the retail learnsets don't know (Generation 5+ guests)
         {
             // The encounter generator knows retail HeartGold's level-up moves; the game's own table differs for these Pokémon.
             var moves = new List<ushort>();
             foreach (var move in PsyduckYellowExpanded.Learnsets[pk.Species].GetMoveRange(pk.CurrentLevel))
             {
-                if (move <= Legal.MaxMoveID_4 && !moves.Contains(move))
+                if ((move <= Legal.MaxMoveID_4 || pk.Species > Legal.MaxSpeciesID_4) && !moves.Contains(move))
                     moves.Add(move);
             }
             var last = moves.Count > 4 ? moves.GetRange(moves.Count - 4, 4) : moves;

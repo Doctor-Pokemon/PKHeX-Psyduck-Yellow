@@ -39,6 +39,8 @@ public static class MoveSetApplicator
         /// <returns>4 moves</returns>
         public void GetMoveSet(Span<ushort> moves, bool random = false)
         {
+            if (pk is PK4 { IsExpandedEngine: true } expanded && PsyduckYellowExpanded.TryGetSuggestedMoves(expanded, moves))
+                return; // Psyduck Yellow: the game's own level-up moves (the retail move sources cannot describe these Pokemon)
             var la = new LegalityAnalysis(pk);
             la.GetMoveSet(moves, random);
 
@@ -63,6 +65,8 @@ public static class MoveSetApplicator
         /// <returns>4 moves</returns>
         public void GetMoveSet(Span<ushort> moves, bool random = false)
         {
+            if (la.Entity is PK4 { IsExpandedEngine: true } expanded && PsyduckYellowExpanded.TryGetSuggestedMoves(expanded, moves))
+                return;
             la.GetSuggestedCurrentMoves(moves, random ? MoveSourceType.All : MoveSourceType.Encounter);
             if (random && !la.Entity.IsEgg)
                 Util.Rand.Shuffle(moves);

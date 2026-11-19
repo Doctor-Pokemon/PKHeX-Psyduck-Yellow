@@ -58,6 +58,11 @@ public static partial class PsyduckYellow0029
         CreateStaticBattle(143, 160, 50), // Snorlax, level 50
         CreateStaticBattle(144, 203, 50), CreateStaticBattle(145, 158, 50), CreateStaticBattle(146, 221, 50), CreateStaticBattle(150, 199, 70), // Articuno, Zapdos, Moltres (Victory Road) and Mewtwo at Yellow's levels
         CreateKantoGift(129, 151, 5), // the Magikarp salesman in the Mt. Moon Pokémon Center: level 5, bought (any Gyarados line Pokémon can come from it)
+        // Fossil revivals (Pewter Museum scientists, ROM 0393-0407): level 20, met at location 140. Engine species ids: the Gen 1-4 fossils, Tirtouga / Archen / Tyrunt / Amaura (national id + 50), the four Galar fossil Pokémon (930-933) and the four new fossil species (1587-1590)
+        CreateKantoGift(138, 140, 20), CreateKantoGift(140, 140, 20), CreateKantoGift(142, 140, 20), CreateKantoGift(345, 140, 20), CreateKantoGift(347, 140, 20), CreateKantoGift(408, 140, 20), CreateKantoGift(410, 140, 20),
+        CreateKantoGift(614, 140, 20), CreateKantoGift(616, 140, 20), CreateKantoGift(746, 140, 20), CreateKantoGift(748, 140, 20),
+        CreateKantoGift(930, 140, 20), CreateKantoGift(931, 140, 20), CreateKantoGift(932, 140, 20), CreateKantoGift(933, 140, 20),
+        CreateKantoGift(1587, 140, 20), CreateKantoGift(1588, 140, 20), CreateKantoGift(1589, 140, 20), CreateKantoGift(1590, 140, 20),
     ];
     private static EncounterStatic4 CreateStaticBattle(ushort species, byte location, byte level) => new(GameVersion.HG)
     {
@@ -73,6 +78,18 @@ public static partial class PsyduckYellow0029
     /// <summary>ROM 0245+ legendary encounters (expanded profile only). Themed spots: species and met location (the map's location id); the daily Embedded Tower pick and the three orb chambers: location 232.
     /// Every one is a wild battle at level 60 + 5 x Johto badges (60..100 in steps of 5), caught in any ball, no fateful flag.</summary>
     public static readonly EncounterStatic4[] Legendaries = CreateLegendaries();
+    /// <summary>The four roaming legendaries (ROM 0275, the retail roamer code: Save_CreateRoamerByID at ARM9 0x02067700 gives Raikou and Entei level 40 and Latias and Latios level 35; the script that creates them is not scaled): caught on any route of the game, so the met location is free and the level is exactly that level.
+    /// The Location here (Route 29) is only the place used when a Pokémon is generated from the encounter.</summary>
+    public static readonly EncounterStatic4[] Roamers =
+    [
+        CreateRoamer((ushort)Species.Raikou, 40), CreateRoamer((ushort)Species.Entei, 40), CreateRoamer((ushort)Species.Latias, 35), CreateRoamer((ushort)Species.Latios, 35),
+    ];
+    private static EncounterStatic4 CreateRoamer(ushort species, byte level) => new(GameVersion.HG)
+    {
+        Species = species, Level = level, Location = 177, IsRoaming = true, IsPsyduckYellowLegendary = true,
+        GroundTile = GroundTileAllowed.None | GroundTileAllowed.Sand | GroundTileAllowed.Grass | GroundTileAllowed.Rock | GroundTileAllowed.Cave | GroundTileAllowed.Water
+                   | GroundTileAllowed.Snow | GroundTileAllowed.Ice | GroundTileAllowed.Building | GroundTileAllowed.Marsh | GroundTileAllowed.Max_Pt,
+    };
     private static EncounterStatic4[] CreateLegendaries()
     {
         (ushort Species, byte Location)[] spots =
@@ -94,6 +111,7 @@ public static partial class PsyduckYellow0029
             AddLevels(list, species, location);
         foreach (var species in tower)
             AddLevels(list, species, 232);
+        AddLevels(list, (ushort)Species.Latios, 140); // Steven Stone's event: the static battle outside the Pewter City museum (the game version branch of the script gives Latios in HeartGold), scaled like the other static legendaries
         return [.. list];
     }
     private static void AddLevels(List<EncounterStatic4> list, ushort species, byte location)

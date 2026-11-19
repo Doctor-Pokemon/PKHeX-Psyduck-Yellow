@@ -7,17 +7,27 @@ public sealed class ItemStoragePsyduckExpanded : IItemStorage
 {
     public static readonly ItemStoragePsyduckExpanded Instance = new();
     private static readonly ushort[] PCItems = CreatePCItems();
+    /// <summary>The Items pocket also offers every named item of the ROM that no pocket lists (see PsyduckYellowExpanded.ExtraItems), so all of them can be injected into the bag.</summary>
+    private static readonly ushort[] ItemsWithExtras = CreateItemsWithExtras();
+    private static ushort[] CreateItemsWithExtras()
+    {
+        var all = new SortedSet<ushort>();
+        foreach (var id in PsyduckYellowExpanded.ItemPockets[0]) all.Add(id);
+        foreach (var id in PsyduckYellowExpanded.ExtraItems) all.Add(id);
+        return [.. all];
+    }
     private static ushort[] CreatePCItems()
     {
         var all = new SortedSet<ushort>();
         for (int i = 0; i < 7; i++) foreach (var id in PsyduckYellowExpanded.ItemPockets[i]) all.Add(id);
+        foreach (var id in PsyduckYellowExpanded.ExtraItems) all.Add(id);
         all.Add(114); all.Add(121);
         return [.. all];
     }
     public bool IsLegal(InventoryType type, int itemIndex, int itemCount) => GetItems(type).Contains((ushort)itemIndex);
     public ReadOnlySpan<ushort> GetItems(InventoryType type) => type switch
     {
-        InventoryType.Items => PsyduckYellowExpanded.ItemPockets[0],
+        InventoryType.Items => ItemsWithExtras,
         InventoryType.Medicine => PsyduckYellowExpanded.ItemPockets[1],
         InventoryType.Balls => PsyduckYellowExpanded.ItemPockets[2],
         InventoryType.TMHMs => PsyduckYellowExpanded.ItemPockets[3],

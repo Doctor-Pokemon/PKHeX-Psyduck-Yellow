@@ -11,7 +11,8 @@ namespace PKHeX.Core;
 public static class PsyduckYellowLegality
 {
     /// <summary>Judge every Psyduck Yellow Pokémon with the game's own tables, even those the retail Generation 4 view could describe (used by the self-consistency tests).</summary>
-    public static bool ForceOwnRules { get; set; }
+    [ThreadStatic] private static bool forceOwnRules;
+    public static bool ForceOwnRules { get => forceOwnRules; set => forceOwnRules = value; }
 
     /// <summary>Everything with a species is judged (eggs included).</summary>
     internal static bool CanAnalyze(PK4 pk) => pk.Species != 0;
@@ -136,6 +137,7 @@ public static class PsyduckYellowLegality
         return enc switch
         {
             EncounterSlot4 slot => slot.Location == pk.MetLocation && pk.MetLevel >= slot.LevelMin, // no upper bound: the game raises wild levels as the player progresses
+            EncounterStatic4 { IsRoaming: true } roamer => roamer.Level == pk.MetLevel && pk.MetLocation != 0, // a roamer is met on any route
             EncounterStatic4 st => st.Location == pk.MetLocation && st.Level == pk.MetLevel,
             _ => false,
         };

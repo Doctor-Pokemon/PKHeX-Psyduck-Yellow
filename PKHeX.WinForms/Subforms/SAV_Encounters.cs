@@ -363,7 +363,8 @@ public partial class SAV_Encounters : Form
             if (settings.Version is not (0 or GameVersion.PY))
                 return [];
             var wanted = settings.Moves.ToArray();
-            return settings.Species == 0 ? PsyduckYellowEncounterSearch.SearchAll(wanted) : PsyduckYellowEncounterSearch.Search(settings.Species, wanted);
+            var found = settings.Species == 0 ? PsyduckYellowEncounterSearch.SearchAll(wanted) : PsyduckYellowEncounterSearch.Search(settings.Species, wanted);
+            return settings.SearchEgg is null ? found : found.Where(z => z.IsEgg == settings.SearchEgg); // Egg ticked = Day Care eggs only, unticked = no eggs (shininess is decided when the Pokémon is generated, so the Shiny box is not a filter here)
         }
         var pk = SAV.BlankPKM;
 

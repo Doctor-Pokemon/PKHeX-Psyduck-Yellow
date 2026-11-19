@@ -76,7 +76,8 @@ public static class SaveExtensions
                     errata.Add($"{MsgIndexMoveGame} {movestr[move]}");
             }
 
-            if (pk.Ability > strings.Ability.Count)
+            var abilityCount = sav is SAV4HGSS { IsExpandedEngine: true } ? PsyduckYellowExpanded.AbilityNames.Length : strings.Ability.Count; // the game's own ability list is longer than retail's
+            if (pk.Ability >= abilityCount)
                 errata.Add($"{MsgIndexAbilityRange} {pk.Ability}");
             else if (pk.Ability > sav.MaxAbilityID)
                 errata.Add($"{MsgIndexAbilityGame} {strings.Ability[pk.Ability]}");

@@ -6,7 +6,7 @@ from pathlib import Path
 import sys,json,struct,ndspy.rom,ndspy.narc
 from msgdecode import decode_messages
 root=(REPO/'PKHeX.Core');out=HERE/'out';out.mkdir(exist_ok=True);rom=ndspy.rom.NintendoDSRom.fromFile(sys.argv[1])
-text=ndspy.narc.NARC(rom.getFileByName('a/0/2/7'));mapping=json.loads((HERE/'text-map.json').read_text());chars={v:k for k,v in mapping.items()}
+text=ndspy.narc.NARC(rom.getFileByName('a/0/2/7'));mapping=json.loads((HERE/'text-map.json').read_text());chars={v:k for k,v in mapping.items()};chars.setdefault(0x1b3,"'")
 def names(i):
  _,lines=decode_messages(text.files[i]);return [''.join(chars.get(v,'?' if v not in (0xffff,0xe000) else '') for v in row if v!=0xffff) for row in lines]
 personal=ndspy.narc.NARC(rom.getFileByName('a/0/0/2')).files;items=ndspy.narc.NARC(rom.getFileByName('a/0/1/7')).files;addons=ndspy.narc.NARC(rom.getFileByName('a/0/2/8')).files
