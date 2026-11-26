@@ -91,7 +91,10 @@ public static partial class PsyduckYellowExpanded
     public static bool CanLearnMachine(ushort species, ushort move) => species < MachineData.Value.Length && Array.IndexOf(MachineData.Value[species].Machine, move) >= 0;
 
     /// <summary>True if the expanded game lets this (internal) species learn the move from a move tutor.</summary>
-    public static bool CanLearnTutor(ushort species, ushort move) => species < MachineData.Value.Length && Array.IndexOf(MachineData.Value[species].Tutor, move) >= 0;
+    public static bool CanLearnTutor(ushort species, ushort move) => (species < MachineData.Value.Length && Array.IndexOf(MachineData.Value[species].Tutor, move) >= 0) || Array.IndexOf(ScriptTutors, (species, move)) >= 0;
+
+    /// <summary>Moves taught by scripted tutors that are not in the game's tutor table: Grandma Wilma in Blackthorn City teaches Dragon Ascent (623) to Rayquaza (ROM 0413+; it is no longer a level-up move).</summary>
+    private static readonly (ushort Species, ushort Move)[] ScriptTutors = [(384, 623)];
 
     /// <summary>Marks every move the species can learn by TM/HM (<paramref name="machine"/>) or from a tutor, for the move suggestions.</summary>
     public static void SetAllMachineAndTutor(Span<bool> result, ushort species, bool machine, bool tutor)

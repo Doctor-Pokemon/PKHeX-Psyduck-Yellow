@@ -15,6 +15,7 @@ public sealed class MetDataSource(GameStrings s)
     private readonly List<ComboItem> MetGen3 = CreateGen3(s);
     private readonly List<ComboItem> MetGen3CXD = CreateGen3CXD(s);
     private readonly List<ComboItem> MetGen4 = CreateGen4(s);
+    private readonly List<ComboItem> MetGen4PY = CreateGen4(s, s.Gen4PY);
     private readonly List<ComboItem> MetGen5 = CreateGen5(s);
     private readonly List<ComboItem> MetGen6 = CreateGen6(s);
     private readonly List<ComboItem> MetGen7 = CreateGen7(s);
@@ -49,15 +50,17 @@ public sealed class MetDataSource(GameStrings s)
         return list;
     }
 
-    private static List<ComboItem> CreateGen4(GameStrings s)
+    private static List<ComboItem> CreateGen4(GameStrings s) => CreateGen4(s, s.Gen4);
+
+    private static List<ComboItem> CreateGen4(GameStrings s, LocationSet4 set)
     {
-        var locations = Util.GetCBList(s.Gen4.Met0, 0);
-        Util.AddCBWithOffset(locations, s.Gen4.Met2, 2000, Locations.Daycare4);
-        Util.AddCBWithOffset(locations, s.Gen4.Met2, 2000, Locations.LinkTrade4);
-        Util.AddCBWithOffset(locations, s.Gen4.Met3, 3000, Locations.Ranger4);
-        Util.AddCBWithOffset(locations, s.Gen4.Met0, 0000, Locations4.Met0);
-        Util.AddCBWithOffset(locations, s.Gen4.Met2, 2000, Locations4.Met2);
-        Util.AddCBWithOffset(locations, s.Gen4.Met3, 3000, Locations4.Met3);
+        var locations = Util.GetCBList(set.Met0, 0);
+        Util.AddCBWithOffset(locations, set.Met2, 2000, Locations.Daycare4);
+        Util.AddCBWithOffset(locations, set.Met2, 2000, Locations.LinkTrade4);
+        Util.AddCBWithOffset(locations, set.Met3, 3000, Locations.Ranger4);
+        Util.AddCBWithOffset(locations, set.Met0, 0000, Locations4.Met0);
+        Util.AddCBWithOffset(locations, set.Met2, 2000, Locations4.Met2);
+        Util.AddCBWithOffset(locations, set.Met3, 3000, Locations4.Met3);
         return locations;
     }
 
@@ -288,7 +291,8 @@ public sealed class MetDataSource(GameStrings s)
         FR or LG when context == EntityContext.Gen3 => Partition1(MetGen3, IsMetLocation3FRLG),
         D or P   when context == EntityContext.Gen4 => Partition2(MetGen4, IsMetLocation4DP, 4),
         Pt       when context == EntityContext.Gen4 => Partition2(MetGen4, IsMetLocation4Pt, 4),
-        HG or SS or PY when context == EntityContext.Gen4 => Partition2(MetGen4, IsMetLocation4HGSS, 4),
+        HG or SS when context == EntityContext.Gen4 => Partition2(PsyduckYellowExpanded.UseGameLocationNames ? MetGen4PY : MetGen4, IsMetLocation4HGSS, 4),
+        PY when context == EntityContext.Gen4 => Partition2(MetGen4PY, IsMetLocation4HGSS, 4),
 
         B  or W  => Partition2(MetGen5, IsMetLocation5BW), // Abyssal Ruins
         B2 or W2 => MetGen5,

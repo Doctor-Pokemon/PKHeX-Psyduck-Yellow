@@ -112,8 +112,19 @@ public static partial class PsyduckYellow0029
         foreach (var species in tower)
             AddLevels(list, species, 232);
         AddLevels(list, (ushort)Species.Latios, 140); // Steven Stone's event: the static battle outside the Pewter City museum (the game version branch of the script gives Latios in HeartGold), scaled like the other static legendaries
+        // fixed-level static battles: Shaymin in Bill's Garden (ROM 0459+, location 68 'Bill's Garden', level 70, after all nine Grass starters are caught);
+        // the second-Hall-of-Fame spots of ROMs 0313-0458: Cresselia on Route 25 (location 173) and Shaymin in the Johto National Park (location 207), level 100 (Pokémon caught there stay legal)
+        AddFixed(list, (ushort)Species.Shaymin, 68, 70);
+        AddFixed(list, (ushort)Species.Cresselia, 173, 100);
+        AddFixed(list, (ushort)Species.Shaymin, 207, 100);
         return [.. list];
     }
+    private static void AddFixed(List<EncounterStatic4> list, ushort species, byte location, byte level) => list.Add(new EncounterStatic4(GameVersion.HG)
+    {
+        Species = species, Level = level, Location = location, IsPsyduckYellowLegendary = true,
+        GroundTile = GroundTileAllowed.None | GroundTileAllowed.Sand | GroundTileAllowed.Grass | GroundTileAllowed.Rock | GroundTileAllowed.Cave | GroundTileAllowed.Water
+                   | GroundTileAllowed.Snow | GroundTileAllowed.Ice | GroundTileAllowed.Building | GroundTileAllowed.Marsh | GroundTileAllowed.Max_Pt,
+    });
     private static void AddLevels(List<EncounterStatic4> list, ushort species, byte location)
     {
         for (byte level = 60; level <= 100; level += 5)

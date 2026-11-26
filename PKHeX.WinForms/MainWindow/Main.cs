@@ -765,6 +765,7 @@ public partial class Main : Form
         StoreLegalSaveGameData(sav);
         ParseSettings.InitFromSaveFileData(sav); // physical GB, no longer used in logic
         PsyduckYellowImport.Enabled = sav is SAV4PY; // later-generation Pokémon can be brought into Psyduck Yellow only
+        PsyduckYellowExpanded.UseGameLocationNames = sav is SAV4PY; // met locations the game renamed (Bill's Garden, Secret Tunnel, Pokémon Tower)
         RecentTrainerCache.SetRecentTrainer(sav);
         SpriteUtil.Initialize(sav); // refresh sprite generator
         dragout.Size = ScaleSize(new Size(SpriteUtil.Spriter.Width, SpriteUtil.Spriter.Height), WholeWindowScale);

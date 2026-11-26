@@ -26,6 +26,10 @@ res=root/'Resources/byte/personal/personal_psyduck_expanded';res.write_bytes(con
 code='using System;\nnamespace PKHeX.Core;\npublic static partial class PsyduckYellowExpanded\n{\n'
 for label,data in [('SpeciesNames',species),('MoveNames',moves),('AbilityNames',abilities),('ItemNames',itemnames)]:code+='    public static readonly string[] '+label+' = '+json.dumps(data,ensure_ascii=True).replace('\\u0000','')+';\n'
 for label,data in [('Ability1',[v[0] for v in abilities12]),('Ability2',[v[1] or v[0] for v in abilities12]),('HiddenAbility',hidden),('FormMap',[v&0x7fff for v in forms])]:code+='    public static readonly ushort[] '+label+' = ['+','.join(map(str,data))+'];\n'
+# met-location names the game renamed (text bank 279 vs the retail English HGSS list; apostrophe styles and the file's BOM are not differences)
+_retail=(REPO/'PKHeX.Core/Resources/text/locations/gen4/text_hgss_00000_en.txt').read_text(encoding='utf-8').lstrip('\ufeff').splitlines();_norm=lambda t:t.replace('\u2019',"'")
+_locs=[(i,n) for i,n in enumerate(names(279)) if i<len(_retail) and n and _norm(n)!=_norm(_retail[i])]
+code+='    /// <summary>Met locations whose name the game changed (index, name), read from the ROM.</summary>\n    public static readonly (int Index, string Name)[] LocationNameOverrides = ['+', '.join('(%d, %s)'%(i,json.dumps(n,ensure_ascii=True)) for i,n in _locs)+'];\n'
 code+='    public static readonly ushort[][] ItemPockets = [\n'+',\n'.join('        ['+','.join(map(str,vs))+']' for vs in pockets)+'\n    ];\n}\n'
 (root/'Editing/PsyduckYellowExpanded.Resources.cs').write_text(code)
 p=root/'Editing/PsyduckYellowExpanded.cs';p.write_text(p.read_text(encoding='utf-8-sig').replace('public static class PsyduckYellowExpanded','public static partial class PsyduckYellowExpanded'))

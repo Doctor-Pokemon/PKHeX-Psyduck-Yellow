@@ -21,6 +21,21 @@ public sealed class GameStrings : IBasicStrings
     // Met Locations
     public readonly LocationSet0 Gen2, Gen3, CXD;
     public readonly LocationSet4 Gen4;
+
+    /// <summary>Gen 4 locations as Psyduck Yellow names them (HeartGold's list with the game's renamed rows).</summary>
+    public LocationSet4 Gen4PY => _gen4py ??= CreateGen4PY();
+    private LocationSet4? _gen4py;
+
+    private LocationSet4 CreateGen4PY()
+    {
+        var met0 = (string[])Gen4.Met0.Clone();
+        foreach (var (index, name) in PsyduckYellowExpanded.LocationNameOverrides)
+        {
+            if ((uint)index < met0.Length)
+                met0[index] = name;
+        }
+        return new LocationSet4(met0, Gen4.Met2, Gen4.Met3);
+    }
     public readonly LocationSet6 Gen5, Gen6, Gen7, Gen7b, Gen8, Gen8a, Gen8b, Gen9, Gen9a;
 
     // Misc
@@ -967,6 +982,7 @@ public sealed class GameStrings : IBasicStrings
     {
         2 => Gen2,
         3 => version is (GameVersion.COLO or GameVersion.XD or GameVersion.CXD) ? CXD : Gen3,
+        4 when version is GameVersion.PY || (PsyduckYellowExpanded.UseGameLocationNames && version is GameVersion.HG or GameVersion.SS) => Gen4PY,
         4 => Gen4,
         5 => Gen5,
         6 => Gen6,

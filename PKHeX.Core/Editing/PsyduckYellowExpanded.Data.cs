@@ -10,6 +10,9 @@ public static partial class PsyduckYellowExpanded
     public static ushort MaxAbility => (ushort)(AbilityNames.Length - 1);
     public static ushort MaxItem => (ushort)(ItemNames.Length - 1);
     /// <summary>Every item of the game's name table that no pocket lists. Their ROM item records are empty (items of later generations, the game's special held items, key-item-like objects ...), so the game's own pockets do not know them, but the owner wants EVERY item of the ROM to be injectable into a save, usable or not (2026-11-19). Names that are empty, "-----" or "???" are not items and stay out.</summary>
+    /// <summary>True while a Psyduck Yellow save is loaded: Gen 4 met locations of HeartGold / SoulSilver / Psyduck Yellow origin then show the game's own names
+    /// (Pokémon caught in Psyduck Yellow record HeartGold as their origin game). Set by the app when it loads a save.</summary>
+    public static bool UseGameLocationNames { get; set; }
     public static ReadOnlySpan<ushort> ExtraItems => ExtraItemData.Value;
     private static readonly Lazy<ushort[]> ExtraItemData = new(GetExtraItems);
     private static ushort[] GetExtraItems()
@@ -31,7 +34,7 @@ public static partial class PsyduckYellowExpanded
     {
         var result = new SortedSet<ushort>();
         for (int i = 0; i < 7; i++) foreach (var id in ItemPockets[i]) result.Add(id);
-        // Some of the game's held items have an empty record in the ROM's item data (the engine recognises them by id), so they are in no pocket: add them by name. Held ids 776-806, 835-836, 921-926, 947 and the bag copies 807-834, 927-932 (the engine swaps the two on give/take, so either id may be seen on a Pokemon).
+        // The game's Z-Crystals have an empty record in the ROM's item data (the engine recognises them by id), so they are in no pocket: add them by name. Held ids 776-806, 835-836, 921-926, 947 and the bag copies 807-834, 927-932 (the engine swaps the two on give/take, so either id may be seen on a Pokemon).
         for (int id = 0; id < ItemNames.Length; id++)
         {
             bool z = id is (>= 776 and <= 836) or (>= 921 and <= 932) or 947;
